@@ -4,20 +4,16 @@
 This view is creating a ripple effect on a view in HMOS.
 
 ## Source
-
 The code in this repository was inspired from https://github.com/traex/RippleEffect. We are very thankful to traex.
 
 ## Screenshot
-
 ![Circular Ripple Effect](Images/Ripple.png)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 ## Features
-
 * Circular Ripple Effect on a view 
 
 ## Installation
-
 In order to use the library, add the following line to your **root** gradle file:
 
 1. For using RippleEffect library module in sample app, include the source code and add the below dependencies in entry/build.gradle to generate hap/support.har.
@@ -39,7 +35,6 @@ In order to use the library, add the following line to your **root** gradle file
 ```
 
 ## Usage
-
 To use RippleEffect in your app simply follow below simple steps:
 
 #### Layout xml
@@ -62,27 +57,26 @@ To display circular ripple effect on a view, declare RippleView in layout xml fi
 </com.andexert.rippleeffect.RippleView>
 ```
 ## Customization
+Developer can change several attributes in the layout file.
 
-You can change several attributes in the XML file, you have to remove "rv_" if you are using a version below v1.1.1 :
-
-app:rv_alpha --> Alpha of the ripple
-app:rv_framerate --> Frame rate of the ripple animation
-app:rv_rippleDuration --> Duration of the ripple animation
-app:rv_ripplePadding --> Add a padding to the ripple
-app:rv_color --> Color of the ripple
-app:rv_centered --> Center ripple in the child view
-app:rv_type --> Simple or double ripple
-app:rv_zoom --> Enable zoom animation
-app:rv_zoomDuration --> Duration of zoom animation
-app:rv_zoomScale --> Scale of zoom animation
-For each attribute you can use getters and setters to change values dynamically.
+```
+    app:rv_alpha --> Alpha of the ripple
+    app:rv_framerate --> Frame rate of the ripple animation
+    app:rv_rippleDuration --> Duration of the ripple animation
+    app:rv_ripplePadding --> Add a padding to the ripple
+    app:rv_color --> Color of the ripple
+    app:rv_centered --> Center ripple in the child view
+    app:rv_type --> Simple or double ripple
+    app:rv_zoom --> Enable zoom animation
+    app:rv_zoomDuration --> Duration of zoom animation
+    app:rv_zoomScale --> Scale of zoom animation
+```
+For each attribute developer can use getters and setters to change values dynamically.
 
 ## Support & extension
-
 Currently the ripple effect is limited to circular shape only.
 
 ## MIT License
-
 ```
     The MIT License (MIT)
 
