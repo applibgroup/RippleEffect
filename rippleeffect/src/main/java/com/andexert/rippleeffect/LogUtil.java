@@ -43,6 +43,9 @@ public class LogUtil {
 
     /**
      * debug method for HiLog.
+     *
+     * @param tag log tag
+     * @param message debug log message
      */
     public static void debug(String tag, String message) {
 
@@ -51,6 +54,9 @@ public class LogUtil {
 
     /**
      * info method for HiLog.
+     *
+     * @param tag log tag
+     * @param message info log message
      */
     public static void info(String tag, String message) {
         HiLog.info(LOG_LABEL, LOG_FORMAT, tag, message);
@@ -58,6 +64,9 @@ public class LogUtil {
 
     /**
      * warn method for HiLog.
+     *
+     * @param tag log tag
+     * @param message warning log message
      */
     public static void warn(String tag, String message) {
 
@@ -66,6 +75,9 @@ public class LogUtil {
 
     /**
      * error method for HiLog.
+     *
+     * @param tag log tag
+     * @param message error log message
      */
     public static void error(String tag, String message) {
 

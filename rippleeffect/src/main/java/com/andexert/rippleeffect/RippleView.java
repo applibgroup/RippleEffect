@@ -24,12 +24,15 @@
 
 package com.andexert.rippleeffect;
 
-import com.example.rippleeffect.ResourceTable;
 import ohos.agp.animation.Animator;
 import ohos.agp.animation.AnimatorGroup;
 import ohos.agp.animation.AnimatorProperty;
 import ohos.agp.animation.AnimatorValue;
-import ohos.agp.components.*;
+import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
+import ohos.agp.components.DependentLayout;
+import ohos.agp.components.ListContainer;
+import ohos.agp.components.Text;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.utils.Color;
@@ -37,11 +40,10 @@ import ohos.app.Context;
 import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
 import ohos.multimodalinput.event.TouchEvent;
+import com.example.rippleeffect.ResourceTable;
 
 /**
- * RippleView custom layout
- *
- * Custom Layout that allows to use Ripple UI pattern above API 21
+ * RippleView custom layout that allows to use Ripple UI pattern.
  *
  * @author Chutaux Robin
  * @version 2015.0512
@@ -52,11 +54,8 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     private int frameRate = 10;
     private int rippleDuration = 400;
     private int rippleAlpha = 40;
-    private EventHandler canvasHandler;
     private float radiusMax = 0;
     private boolean animationRunning = false;
-    private float x = -1;
-    private float y = -1;
     private int zoomDuration = 200;
     private float zoomScale = 1.03f;
     private AnimatorValue scaleAnimation;
@@ -73,13 +72,6 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     private float ripplePosition;
     private float touchPointX;
     private float touchPointY;
-
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            invalidate();
-        }
-    };
 
     private OnRippleCompleteListener onCompletionListener;
 
@@ -98,7 +90,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Method that initializes all fields and sets listeners
+     * Method that initializes all fields and sets listeners.
      *
      * @param attrs Attribute used to initialize fields
      */
@@ -110,28 +102,28 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
             }
         };
 
-        rippleColor = attrs.getAttr(RippleConstant.RV_COLOR).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_COLOR).get().getColorValue() :
-                new Color(getContext().getColor(ResourceTable.Color_rippleColor));
-        rippleType = attrs.getAttr(RippleConstant.RV_TYPE).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_TYPE).get().getIntegerValue() : 0;
-        hasToZoom = attrs.getAttr(RippleConstant.RV_ZOOM).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_ZOOM).get().getBoolValue() : false;
-        isCentered = attrs.getAttr(RippleConstant.RV_CENTERED).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_CENTERED).get().getBoolValue() : false;
-        rippleDuration = attrs.getAttr(RippleConstant.RV_RIPPLE_DURATION).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_RIPPLE_DURATION).get().getIntegerValue() : rippleDuration;
-        frameRate = attrs.getAttr(RippleConstant.RV_FRAME_RATE).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_FRAME_RATE).get().getIntegerValue() : frameRate;
-        rippleAlpha = attrs.getAttr(RippleConstant.RV_ALPHA).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_ALPHA).get().getIntegerValue() : rippleAlpha;
-        ripplePadding = attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).get().getDimensionValue() : 0;
-        canvasHandler = new EventHandler(EventRunner.getMainEventRunner());
+        rippleColor = attrs.getAttr(RippleConstant.RV_COLOR).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_COLOR).get().getColorValue()
+                : new Color(getContext().getColor(ResourceTable.Color_rippleColor));
+        rippleType = attrs.getAttr(RippleConstant.RV_TYPE).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_TYPE).get().getIntegerValue() : 0;
+        hasToZoom = attrs.getAttr(RippleConstant.RV_ZOOM).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_ZOOM).get().getBoolValue() : false;
+        isCentered = attrs.getAttr(RippleConstant.RV_CENTERED).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_CENTERED).get().getBoolValue() : false;
+        rippleDuration = attrs.getAttr(RippleConstant.RV_RIPPLE_DURATION).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_RIPPLE_DURATION).get().getIntegerValue()
+                : rippleDuration;
+        frameRate = attrs.getAttr(RippleConstant.RV_FRAME_RATE).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_FRAME_RATE).get().getIntegerValue() : frameRate;
+        rippleAlpha = attrs.getAttr(RippleConstant.RV_ALPHA).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_ALPHA).get().getIntegerValue() : rippleAlpha;
+        ripplePadding = attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).get().getDimensionValue() : 0;
         zoomScale = attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).isPresent() ?
                 attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).get().getFloatValue() : 1.03f;
-        zoomDuration = attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).get().getIntegerValue() : 200;
+        zoomDuration = attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).get().getIntegerValue() : 200;
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -150,16 +142,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
             downTime = System.currentTimeMillis();
             downPose = true;
         } else if (touchEvent.getPointerCount() == 1 && touchEvent.getAction() == TouchEvent.POINT_MOVE) {
-            if (downPose
-                    && Math.abs(getTouchDownX(touchEvent, 0) - touchDownX) < dp2px(50)
-                    && Math.abs(getTouchDownY(touchEvent, 0) - touchDownY) < dp2px(50)) {
-                if (System.currentTimeMillis() - downTime > 500) {
-                    downPose = false;
-                    animateRipple(getTouchDownX(touchEvent, 0), getTouchDownY(touchEvent, 0));
-                }
-            } else {
-                downPose = false;
-            }
+            updateTouch(touchEvent);
         } else if (touchEvent.getPointerCount() == 1
                 && touchEvent.getAction() == TouchEvent.PRIMARY_POINT_UP) {
             if (downPose
@@ -203,6 +186,19 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
         canvas.drawCircle(touchPointX, touchPointY, radiusMax * ripplePosition - width / 2, paint);
     }
 
+    private void updateTouch(TouchEvent touchEvent) {
+        if (downPose
+                && Math.abs(getTouchDownX(touchEvent, 0) - touchDownX) < dp2px(50)
+                && Math.abs(getTouchDownY(touchEvent, 0) - touchDownY) < dp2px(50)) {
+            if (System.currentTimeMillis() - downTime > 500) {
+                downPose = false;
+                animateRipple(getTouchDownX(touchEvent, 0), getTouchDownY(touchEvent, 0));
+            }
+        } else {
+            downPose = false;
+        }
+    }
+
     private float getTouchDownX(TouchEvent touchEvent, int index) {
         float x = 0;
         if (touchEvent.getPointerCount() > index) {
@@ -234,19 +230,19 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     private void scaleAnimate() {
-        AnimatorGroup animatorGroup = new AnimatorGroup();
         AnimatorProperty scaleAnimation1 = new AnimatorProperty(this);
         scaleAnimation1.setDuration(zoomDuration);
         scaleAnimation1.scaleX(zoomScale).scaleY(zoomScale);
         AnimatorProperty scaleAnimation2 = new AnimatorProperty(this);
         scaleAnimation2.setDuration(zoomDuration);
         scaleAnimation2.scaleX(1.0f).scaleY(1.0f);
+        AnimatorGroup animatorGroup = new AnimatorGroup();
         animatorGroup.build().addAnimators(scaleAnimation1).addAnimators(scaleAnimation2);
         animatorGroup.start();
     }
 
     /**
-     * Launch Ripple animation for the current view centered at x and y position
+     * Launch Ripple animation for the current view centered at x and y position.
      *
      * @param x Horizontal position of the ripple center
      * @param y Vertical position of the ripple center
@@ -256,7 +252,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Create Ripple animation centered at x, y
+     * Create Ripple animation centered at x, y.
      *
      * @param x Horizontal position of the ripple center
      * @param y Vertical position of the ripple center
@@ -278,14 +274,17 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
                         new Animator.StateChangedListener() {
                             @Override
                             public void onStart(Animator animator) {
+                                LogUtil.info(TAG, "Animator onStart()");
                             }
 
                             @Override
                             public void onStop(Animator animator) {
+                                LogUtil.info(TAG, "Animator onStop()");
                             }
 
                             @Override
                             public void onCancel(Animator animator) {
+                                LogUtil.info(TAG, "Animator onCancel()");
                             }
 
                             @Override
@@ -298,10 +297,12 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
 
                             @Override
                             public void onPause(Animator animator) {
+                                LogUtil.info(TAG, "Animator onPause()");
                             }
 
                             @Override
                             public void onResume(Animator animator) {
+                                LogUtil.info(TAG, "Animator onResume()");
                             }
                         });
             }
@@ -311,42 +312,29 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
             animationRunning = true;
             touchPointX = x;
             touchPointY = y;
-//            ripple + Animation.start();
             scaleAnimation.start();
         }
     }
 
     /**
-     * Send a click event if parent view is a Listview instance
-     *
-     * @param isLongClick Is the event a long click ?
-     */
-    private void sendClickEvent(final Boolean isLongClick) {
-        if (getComponentParent() instanceof ListContainer) {
-            final ListContainer adapterView = (ListContainer) getComponentParent();
-            final int position = adapterView.getIndexForComponent(this);
-        }
-    }
-
-    /**
-     * Set Ripple color, default is #FFFFFF
+     * Set Ripple color, default is #FFFFFF.
      *
      * @param rippleColor New color resource
      */
-	public void setRippleColor(int rippleColor) {
-		this.rippleColor = new Color(getContext().getColor(ResourceTable.Color_color_1));
-	}
+    public void setRippleColor(int rippleColor) {
+        this.rippleColor = new Color(getContext().getColor(ResourceTable.Color_color_1));
+    }
 
-	public Color getRippleColor() {
-		return rippleColor;
-	}
+    public Color getRippleColor() {
+        return rippleColor;
+    }
 
     public RippleType getRippleType() {
         return RippleType.values()[rippleType];
     }
 
     /**
-     * Set Ripple type, default is RippleType.SIMPLE
+     * Set Ripple type, default is RippleType.SIMPLE.
      *
      * @param rippleType New Ripple type for next animation
      */
@@ -359,9 +347,9 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Set if ripple animation has to be centered in its parent view or not, default is False
+     * Set if ripple animation has to be centered in its parent view or not, default is False.
      *
-     * @param isCentered
+     * @param isCentered is centered boolean
      */
     public void setCentered(final boolean isCentered) {
         this.isCentered = isCentered;
@@ -372,7 +360,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Set Ripple padding if you want to avoid some graphic glitch
+     * Set Ripple padding if you want to avoid some graphic glitch.
      *
      * @param ripplePadding New Ripple padding in pixel, default is 0px
      */
@@ -385,7 +373,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * At the end of Ripple effect, the child views has to zoom
+     * At the end of Ripple effect, the child views has to zoom.
      *
      * @param hasToZoom Do the child views have to zoom ? default is False
      */
@@ -398,7 +386,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Scale of the end animation
+     * Scale of the end animation.
      *
      * @param zoomScale Value of scale animation, default is 1.03f
      */
@@ -411,7 +399,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Duration of the ending animation in ms
+     * Duration of the ending animation in ms.
      *
      * @param zoomDuration Duration, default is 200ms
      */
@@ -424,7 +412,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Duration of the Ripple animation in ms
+     * Duration of the Ripple animation in ms.
      *
      * @param rippleDuration Duration, default is 400ms
      */
@@ -437,7 +425,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Set framerate for Ripple animation
+     * Set framerate for Ripple animation.
      *
      * @param frameRate New framerate value, default is 10
      */
@@ -450,7 +438,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Set alpha for ripple effect color
+     * Set alpha for ripple effect color.
      *
      * @param rippleAlpha Alpha value between 0 and 255, default is 90
      */
@@ -463,19 +451,21 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     }
 
     /**
-     * Defines a callback called at the end of the Ripple effect
+     * Defines a callback called at the end of the Ripple effect.
      */
     public interface OnRippleCompleteListener {
         void onComplete(RippleView rippleView);
     }
 
+    /**
+     * Ripple type enum values.
+     */
     public enum RippleType {
         SIMPLE(0),
         DOUBLE(1),
         RECTANGLE(2);
         int type;
-        RippleType(int type)
-        {
+        RippleType(int type) {
             this.type = type;
         }
     }
