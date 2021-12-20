@@ -16,13 +16,13 @@
 
 package com.example.rippple.slice;
 
-import com.example.rippple.CustomListViewAdapter;
-import com.example.rippple.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Component;
 import ohos.agp.components.ListContainer;
 import com.andexert.rippleeffect.LogUtil;
+import com.example.rippple.CustomListViewAdapter;
+import com.example.rippple.ResourceTable;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +36,7 @@ public class MainAbilitySlice extends AbilitySlice {
     private static final String TEXT_GOOGLE = "Google";
     private static final String TEXT_ASUS = "Asus";
     private static final String TEXT_APPLE = "Apple";
-    private ArrayList<String> sourcesArrayList = new ArrayList<String>();
+    private ArrayList<String> sourcesArrayList = new ArrayList<>();
 
     @Override
     public void onStart(Intent intent) {

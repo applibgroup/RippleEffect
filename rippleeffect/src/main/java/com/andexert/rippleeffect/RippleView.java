@@ -31,14 +31,11 @@ import ohos.agp.animation.AnimatorValue;
 import ohos.agp.components.AttrSet;
 import ohos.agp.components.Component;
 import ohos.agp.components.DependentLayout;
-import ohos.agp.components.ListContainer;
 import ohos.agp.components.Text;
 import ohos.agp.render.Canvas;
 import ohos.agp.render.Paint;
 import ohos.agp.utils.Color;
 import ohos.app.Context;
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
 import ohos.multimodalinput.event.TouchEvent;
 import com.example.rippleeffect.ResourceTable;
 
@@ -54,7 +51,6 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
     private int frameRate = 10;
     private int rippleDuration = 400;
     private int rippleAlpha = 40;
-    private float radiusMax = 0;
     private boolean animationRunning = false;
     private int zoomDuration = 200;
     private float zoomScale = 1.03f;
@@ -120,8 +116,8 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
                 ? attrs.getAttr(RippleConstant.RV_ALPHA).get().getIntegerValue() : rippleAlpha;
         ripplePadding = attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).isPresent()
                 ? attrs.getAttr(RippleConstant.RV_RIPPLE_PADDING).get().getDimensionValue() : 0;
-        zoomScale = attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).isPresent() ?
-                attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).get().getFloatValue() : 1.03f;
+        zoomScale = attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).isPresent()
+                ? attrs.getAttr(RippleConstant.RV_ZOOM_SCALE).get().getFloatValue() : 1.03f;
         zoomDuration = attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).isPresent()
                 ? attrs.getAttr(RippleConstant.RV_ZOOM_DURATION).get().getIntegerValue() : 200;
 
@@ -159,6 +155,7 @@ public class RippleView extends DependentLayout implements Component.DrawTask,
 
     @Override
     public void onDraw(Component component, Canvas canvas) {
+        float radiusMax;
         if (getWidth() == 0 || getHeight() == 0) {
             return;
         } else {

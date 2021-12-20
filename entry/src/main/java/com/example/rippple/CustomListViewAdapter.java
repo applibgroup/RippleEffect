@@ -17,8 +17,8 @@
 package com.example.rippple;
 
 import ohos.agp.components.BaseItemProvider;
-import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.Component;
+import ohos.agp.components.ComponentContainer;
 import ohos.agp.components.LayoutScatter;
 import ohos.agp.components.Text;
 import ohos.app.Context;
@@ -89,7 +89,6 @@ public class CustomListViewAdapter extends BaseItemProvider {
     }
 
     public static String changeParamToString(CharSequence charSequence) {
-        String convertToString = charSequence.toString();
-        return convertToString;
+        return charSequence.toString();
     }
 }
