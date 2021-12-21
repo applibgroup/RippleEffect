@@ -1,0 +1,12 @@
+{
+  "color": [
+    {
+      "name": "color_1",
+      "value": "#ffff4444"
+    },
+    {
+      "name": "rippleColor",
+      "value": "#FFFFFF"
+    }
+  ]
+}

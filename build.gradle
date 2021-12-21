@@ -1,24 +1,65 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'com.huawei.ohos.app'
+apply plugin: 'org.sonarqube'
+apply plugin: 'checkstyle'
 
+//For instructions on signature configuration, see https://developer.harmonyos.com/en/docs/documentation/doc-guides/ide_debug_device-0000001053822404#section1112183053510
+ohos {
+    compileSdkVersion 6
+    defaultConfig {
+        compatibleSdkVersion 5
+    }
+}
+	
 buildscript {
     repositories {
-        jcenter()
+        maven {
+            url 'https://repo.huaweicloud.com/repository/maven/'
+        }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.huawei.ohos:hap:3.0.3.4'
+        classpath 'com.huawei.ohos:decctest:1.2.6.0'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3'
     }
 }
 
 allprojects {
-
-    if (hasProperty("VERSION_NAME")) {
-        version = VERSION_NAME
-        group = GROUP
-    }
     repositories {
-        jcenter()
+        maven {
+            url 'https://repo.huaweicloud.com/repository/maven/'
+        }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
+    }
+
+    task checkstyle(type: Checkstyle) {
+        showViolations = true
+        configFile file("config/checkstyle.xml")
+
+        source 'entry/src/main/java'
+        source 'rippleeffect/src/main/java'
+        include '**/*.java'
+
+        classpath = files()
+    }
+}
+
+checkstyle {
+    toolVersion = '8.43'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "applibgroup_RippleEffect"
+        property "sonar.organization", "applibgroup"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.sources", "entry,rippleeffect"
+        property "sonar.java.binaries", "entry/build,rippleeffect/build"
+        property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/checkstyle.xml"
     }
 }
