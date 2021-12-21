@@ -6,6 +6,9 @@ apply plugin: 'checkstyle'
 //For instructions on signature configuration, see https://developer.harmonyos.com/en/docs/documentation/doc-guides/ide_debug_device-0000001053822404#section1112183053510
 ohos {
     compileSdkVersion 6
+    defaultConfig {
+        compatibleSdkVersion 5
+    }
 }
 	
 buildscript {
